@@ -10,11 +10,22 @@ from viberbot.api.viber_requests import ViberSubscribedRequest
 app = Flask(__name__)
 # сюда нужно вставить инфу со своего бота
 viber = Api(BotConfiguration(
-    name='PythonSampleBot',
+    name='rorextermobileapp',
     avatar='http://site.com/avatar.jpg',
     auth_token='51ae52131ea7e51c-9fcb75c341c5804b-df39aea10a6d287f'
 ))
 
+try:
+    viber.set_webhook('https://regal-phoenix-72e850.netlify.app')
+except Exception as e:
+    if hasattr(e, 'result') and 'status' in e.result:
+        status = e.result['status']
+        if status != 0:
+            print(f"Failed to set the webhook. Status: {status}")
+        else:
+            print("Webhook was set successfully.")
+    else:
+        print("Failed to set the webhook. Unexpected response structure.")
 
 @app.route('/', methods=['POST'])
 def incoming():
